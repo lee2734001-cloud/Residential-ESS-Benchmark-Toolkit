@@ -1,0 +1,6 @@
+﻿Brand,Product,Configuration,Width_mm,Depth_mm,Height_mm,Footprint_m2,Volume_m3,Asset_primary,Asset_secondary,Notes,Source
+Huawei,LUTERRA S2,10 kW three-phase inverter + 1 battery pack,590,250,650,0.1475,0.095875,Assets/Huawei/Product.jpeg,,Inverter 590×250×350 mm + battery 590×250×300 mm,User-confirmed benchmark dimensions
+Sigenergy,SigenStor Neo,10 kW three-phase inverter + 1 battery pack,800,240,655,0.192,0.12576,Assets/Sigenergy/Product.png,,One-controller + one-battery benchmark envelope,User-confirmed benchmark dimensions
+FoxESS,HQ3 + EQ5000,10 kW three-phase inverter + 1 battery pack,570,380,795,0.2166,0.172197,Assets/FoxESS/Product.png,,Stackable AIO benchmark envelope,User-confirmed benchmark dimensions
+SolarEdge,Nexis 3-phase + Nexis Battery,10 kW three-phase inverter + 1 battery pack,668,200,967,0.1336,0.129191,Assets/SolarEdge/Battery.png,Assets/SolarEdge/Inverter.png,Inverter and battery are combined vertically in the generator,User-confirmed benchmark dimensions
+EcoFlow,PowerOcean 2 Three-Phase,10 kW three-phase inverter + 1 battery pack,680,203,967,0.13804,0.133485,Assets/EcoFlow/Product.png,,One-pack benchmark envelope,User-confirmed benchmark dimensions

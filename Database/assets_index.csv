@@ -1,0 +1,8 @@
+﻿Brand,Asset_type,Relative_path,Usage
+Huawei,Primary product image,Assets/Huawei/Product.jpeg,Cropped official exhibition photo: inverter + one pack
+Huawei,Source image,Assets/Huawei/source_full_stack.jpeg,Unmodified official exhibition photo
+Sigenergy,Primary product image,Assets/Sigenergy/Product.png,Official PNG
+FoxESS,Primary product image,Assets/FoxESS/Product.png,Official PNG
+SolarEdge,Inverter image,Assets/SolarEdge/Inverter.png,Official PNG
+SolarEdge,Battery image,Assets/SolarEdge/Battery.png,Official PNG
+EcoFlow,Primary product image,Assets/EcoFlow/Product.png,Official PNG

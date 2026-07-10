@@ -4,14 +4,15 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "Assets/**"
-      - "Database/**"
-      - "Scripts/**"
-      - "config.yaml"
-      - "requirements.txt"
+      - "**/Assets/**"
+      - "**/Database/**"
+      - "**/Scripts/**"
+      - "**/requirements.txt"
+      - "**/config.yaml"
+      - ".github/workflows/generate-benchmark.yml"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   generate:
@@ -26,23 +27,69 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Locate toolkit project
+        shell: bash
+        run: |
+          set -euo pipefail
+          GENERATOR="$(find "$GITHUB_WORKSPACE" -type f -path '*/Scripts/benchmark_generator.py' | head -n 1)"
+          if [ -z "$GENERATOR" ]; then
+            echo "ERROR: Scripts/benchmark_generator.py was not found."
+            echo "Repository files currently visible to the runner:"
+            find "$GITHUB_WORKSPACE" -maxdepth 4 -type f | sort
+            exit 1
+          fi
+
+          PROJECT_DIR="$(dirname "$(dirname "$GENERATOR")")"
+          echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
+          echo "Toolkit project found at: $PROJECT_DIR"
+
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f "$PROJECT_DIR/requirements.txt" ]; then
+            python -m pip install --upgrade pip
+            python -m pip install -r "$PROJECT_DIR/requirements.txt"
+          else
+            python -m pip install --upgrade pip
+            python -m pip install python-pptx Pillow openpyxl PyYAML
+          fi
 
       - name: Validate assets
-        run: python Scripts/validate_assets.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$PROJECT_DIR"
+          if [ -f "Scripts/validate_assets.py" ]; then
+            python Scripts/validate_assets.py
+          else
+            echo "Scripts/validate_assets.py not found; skipping validation."
+          fi
 
       - name: Generate PowerPoint
-        run: python Scripts/benchmark_generator.py
-
-      - name: Commit generated output
+        shell: bash
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Output/Residential_ESS_Dimension_Benchmark.pptx
-          if git diff --cached --quiet; then
-            echo "No generated changes to commit."
-          else
-            git commit -m "Auto-generate dimension benchmark PPT"
-            git push
+          set -euo pipefail
+          cd "$PROJECT_DIR"
+          python Scripts/benchmark_generator.py
+
+      - name: Collect generated PowerPoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUTPUT_FILE="$(find "$PROJECT_DIR/Output" -maxdepth 1 -type f -name '*.pptx' | head -n 1)"
+          if [ -z "$OUTPUT_FILE" ]; then
+            echo "ERROR: No PPTX file was generated in $PROJECT_DIR/Output"
+            find "$PROJECT_DIR" -maxdepth 4 -type f | sort
+            exit 1
           fi
+          cp "$OUTPUT_FILE" "$GITHUB_WORKSPACE/Residential_ESS_Dimension_Benchmark.pptx"
+          echo "Generated file: $OUTPUT_FILE"
+
+      - name: Upload generated PPT
+        uses: actions/upload-artifact@v4
+        with:
+          name: Residential_ESS_Dimension_Benchmark
+          path: Residential_ESS_Dimension_Benchmark.pptx
+          if-no-files-found: error
+          retention-days: 30

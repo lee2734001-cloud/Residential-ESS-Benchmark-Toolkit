@@ -1,0 +1,22 @@
+project:
+  name: Residential ESS Benchmark Toolkit
+  version: 1.0.0
+  language: en
+  benchmark_condition: 10 kW three-phase inverter + 1 battery pack
+
+paths:
+  database_xlsx: Database/products.xlsx
+  database_csv: Database/products.csv
+  output_pptx: Output/Residential_ESS_Dimension_Benchmark.pptx
+
+design:
+  slide_ratio: 16:9
+  style: Apple-inspired / Huawei enterprise
+  official_images_only: true
+  true_height_scaling: true
+  include_xyz_axes: true
+  include_top_view_footprint: true
+  include_rankings:
+    - height
+    - footprint
+    - volume
